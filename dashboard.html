@@ -1,0 +1,122 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Weather Dashboard</title>
+     <script src="https://cdn.tailwindcss.com"></script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="./dashboard.js"></script>
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+ 
+     <style>
+         body {
+             font-family: 'Poppins', sans-serif;
+         }
+         #weather-background { 
+             background-size: cover; 
+             background-position: center; 
+             position: absolute; 
+             top: 0; 
+             left: 0; 
+             right: 0; 
+             bottom: 0; 
+             z-index: -1; 
+             transition: background 0.5s ease-in-out;
+         }
+         .glass-effect { 
+             backdrop-filter: blur(10px);
+             background-color: rgba(255, 255, 255, 0.1);
+             border-radius: 10px;
+             border: 1px solid rgba(255, 255, 255, 0.2);
+         }
+         .loader {
+             border: 5px solid #f3f3f3; 
+             border-top: 5px solid #3498db; 
+             border-radius: 50%; 
+             width: 50px; 
+             height: 50px; 
+             animation: spin 1s linear infinite;
+             z-index: 100; 
+         }
+         @keyframes spin { 
+             0% { transform: rotate(0deg); } 
+             100% { transform: rotate(360deg); } 
+         }
+     </style>
+ </head>
+ <body class="bg-gray-900 text-white relative">
+     <div class="min-h-screen lg:grid lg:grid-cols-5 gap-4">
+         <!-- Sidebar for large screens -->
+         <aside class="lg:col-span-1 glass-effect p-6 hidden lg:block">
+             <div class="text-center mb-8">
+                 <h2 class="text-3xl font-bold" id="app-title">Weather App</h2>
+             </div>
+             <nav class="space-y-6">
+                 <a href="./dashboard.html" class="block text-center sidebar-link text-lg text-white hover:text-blue-300 transition duration-300 py-2">Dashboard</a>
+                 <a href="./table.html" class="block text-center sidebar-link text-lg text-white hover:text-blue-300 transition duration-300 py-2">Tables</a>
+             </nav>
+         </aside>
+ 
+         <section class="lg:col-span-4 p-8 relative w-full">
+             <div id="weather-background"></div>
+ 
+             <!-- Mobile Navigation -->
+             <nav class="lg:hidden flex flex-col sm:flex-row justify-between items-center mb-6 glass-effect p-4 rounded-lg">
+                 <h2 class="text-2xl font-bold mb-4 sm:mb-0" id="app-title-mobile">Weather App</h2>
+                 <div class="flex space-x-4 items-center">
+                     <a href="./dashboard.html" class="text-white hover:text-blue-300 transition duration-300">Dashboard</a>
+                     <a href="./table.html" class="text-white hover:text-blue-300 transition duration-300">Table</a>
+                     <!-- Profile Picture added in mobile nav -->
+                     <img src="./mypic1.jpeg"  alt="User Profile" class=" w-12 h-12 rounded-full accordion border-4 border-gray-200 shadow-lg lg:hidden">
+                 </div>
+             </nav>
+ 
+             <!-- Profile Picture hidden on small screens and shown on large screens -->
+             <div class="flex flex-wrap justify-between items-center mb-8 space-y-4 sm:space-y-0 ">
+                 <div class="search-container w-full sm:w-auto flex-grow flex items-center space-x-4">
+                     <input type="text" id="city-input" placeholder="Enter city name" class="w-full sm:w-64 p-3 rounded bg-gray-700 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-400">
+                     <button id="search-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 text-base whitespace-nowrap">
+                         Get Weather
+                     </button>
+                 </div>
+                 
+                 <!-- Profile Picture for larger screens -->
+                 <div class="w-full sm:w-auto flex justify-center sm:justify-end">
+                     <img src="./mypic1.jpeg"  alt="User Profile" class=" w-14 h-14 rounded-full border-2 border-gray-200 shadow-lg hidden lg:block">
+                 </div>
+             </div>
+ 
+             <div id="loader" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                 <div class="loader"></div>
+             </div>
+ 
+             <div id="weather-info" class="hidden relative glass-effect p-8 rounded-lg text-center mb-8 shadow-lg overflow-hidden">
+                 <h2 class="text-4xl font-bold mb-4">Weather in <span id="city-display" class="text-blue-300"></span></h2>
+                 <div class="flex justify-center items-center space-x-4 mb-4">
+                     <p class="text-2xl">Condition: <span id="weather-condition" class="font-semibold"></span></p>
+                     <img id="weather-icon" src="https://via.placeholder.com/50" alt="Weather Icon" class="w-12 h-12">
+                 </div>
+                 <p class="text-3xl mb-4">Temperature: <span id="temperature" class="font-bold"></span>°C</p>
+             </div>
+ 
+             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 <div class="glass-effect p-6 rounded-lg shadow-lg">
+                     <h3 class="text-xl font-bold mb-4">Temperature - Bar Chart</h3>
+                     <canvas id="temperatureBarChart"></canvas>
+                 </div>
+                 <div class="glass-effect p-6 rounded-lg shadow-lg">
+                     <h3 class="text-xl font-bold mb-4">Weather Conditions - Doughnut Chart</h3>
+                     <canvas id="weatherConditionsChart"></canvas>
+                 </div>
+                 <div class="glass-effect p-6 rounded-lg shadow-lg">
+                     <h3 class="text-xl font-bold mb-4">Temperature Changes - Line Chart</h3>
+                     <canvas id="temperatureLineChart"></canvas>
+                 </div>
+             </div>
+         </section>
+     </div>
+ </body>
+ </html>
+ 
