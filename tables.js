@@ -5,6 +5,7 @@ $(document).ready(function() {
   let city = '';
   let currentPage = 0;
   const itemsPerPage = 10;
+  getLocationAndFetchWeather();
 
   function getWeather(city) {
     const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${weatherApiKey}`;
@@ -22,6 +23,34 @@ $(document).ready(function() {
       $('.loader').hide();
     });
   }
+
+  
+  function getLocationAndFetchWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Reverse geocoding to get city name from coordinates
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}`,
+                method: 'GET',
+                success: function(data) {
+                    const cityName = data.name; // Store city name in variable
+                   getWeather(cityName);
+                   $('#cityInput').val(cityName);
+                },
+                error: function() {
+                    alert('Error fetching city name. Please try again.');
+                }
+            });
+        }, error => {
+            alert('Error getting location: ' + error.message);
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
 
   function displayForecast(data) {
     $('#forecast').empty();

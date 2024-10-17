@@ -1,7 +1,7 @@
 $(document).ready(function() {
     const apiKey = '044a716d9a4d2293fc98b5a5d3f97b81';
     let temperatureBarChart, weatherConditionsChart, temperatureLineChart;
-
+    getLocationAndFetchWeather();
     $('#search-btn').click(function() {
         const city = $('#city-input').val();
         if (city) {
@@ -27,6 +27,32 @@ $(document).ready(function() {
         });
     }
 
+    function getLocationAndFetchWeather() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                // Reverse geocoding to get city name from coordinates
+                $.ajax({
+                    url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`,
+                    method: 'GET',
+                    success: function(data) {
+                        const cityName = data.name; // Store city name in variable
+                        $('city-input').val(cityName);
+                        fetchWeatherData(cityName); // Fetch weather data for the city
+                    },
+                    error: function() {
+                        alert('Error fetching city name. Please try again.');
+                    }
+                });
+            }, error => {
+                alert('Error getting location: ' + error.message);
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
     function displayCurrentWeather(data) {
         const city = data.city.name;
         const dailyData = data.list.filter(item => item.dt_txt.includes("12:00:00"));
