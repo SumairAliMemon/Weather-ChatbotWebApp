@@ -11,6 +11,32 @@
      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
  
      <style>
+
+
+        /* Loader styles */
+.loader {
+    border-radius: 50%;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid #4f83e8;
+    border-right: 4px solid #4f83e8;
+}
+
+/* Glass effect for the weather info */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.2); /* Light background for glass effect */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+    #weather-info {
+        padding: 2rem 4rem; /* Increased padding for larger screens */
+    }
+}
+
          body {
              font-family: 'Poppins', sans-serif;
          }
@@ -81,25 +107,33 @@
                          Get Weather
                      </button>
                  </div>
-                 
+                
                  <!-- Profile Picture for larger screens -->
                  <div class="w-full sm:w-auto flex justify-center sm:justify-end">
                      <img src="./mypic1.jpeg"  alt="User Profile" class=" w-14 h-14 rounded-full border-2 border-gray-200 shadow-lg hidden lg:block">
                  </div>
              </div>
  
-             <div id="loader" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                 <div class="loader"></div>
-             </div>
+            
+             
  
-             <div id="weather-info" class="hidden relative glass-effect p-8 rounded-lg text-center mb-8 shadow-lg overflow-hidden">
-                 <h2 class="text-4xl font-bold mb-4">Weather in <span id="city-display" class="text-blue-300"></span></h2>
-                 <div class="flex justify-center items-center space-x-4 mb-4">
-                     <p class="text-2xl">Condition: <span id="weather-condition" class="font-semibold"></span></p>
-                     <img id="weather-icon" src="https://via.placeholder.com/50" alt="Weather Icon" class="w-12 h-12">
-                 </div>
-                 <p class="text-3xl mb-4">Temperature: <span id="temperature" class="font-bold"></span>°C</p>
-             </div>
+            <div id="loader" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-1000 flex items-center justify-center hidden">
+                <div class="loader animate-spin rounded-full border-t-4 border-b-4 border-blue-400 w-16 h-16"></div>
+            </div>
+            
+            <div id="weather-info" class="hidden relative glass-effect p-8 rounded-lg text-center mb-8 shadow-lg overflow-hidden">
+                <h2 class="text-4xl font-bold mb-6">Weather in <span id="city-display" class="text-blue-300"></span></h2>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+                    <img id="weather-icon" src="https://via.placeholder.com/50" alt="Weather Icon" class="w-16 h-16">
+                    <div>
+                        <p class="text-2xl">Condition: <span id="weather-condition" class="font-semibold"></span></p>
+                        <p class="text-2xl">Wind Speed: <span id="wind-speed" class="font-semibold"></span></p>
+                        <p class="text-2xl">Humidity: <span id="humidity" class="font-semibold"></span></p>
+                    </div>
+                </div>
+                <p class="text-3xl mb-4">Temperature: <span id="temperature" class="font-bold"></span>°C</p>
+            </div>
+            
  
              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                  <div class="glass-effect p-6 rounded-lg shadow-lg">

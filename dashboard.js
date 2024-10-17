@@ -31,13 +31,18 @@ $(document).ready(function() {
         const city = data.city.name;
         const dailyData = data.list.filter(item => item.dt_txt.includes("12:00:00"));
         const temperatures = dailyData.map(item => Math.round(item.main.temp));
+        const Wind = dailyData.map(item => Math.round(item.wind.speed));
+        const Humidity = dailyData.map(item => Math.round(item.main.humidity));
         const conditions = dailyData.map(item => item.weather[0].main);
         const icons = dailyData.map(item => `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`);
-
+      
         $('#city-display').text(city);
         $('#weather-condition').text(conditions[0]);
         $('#temperature').text(temperatures[0]);
+        $('#wind-speed').text(Wind[0] + "m/s");
+        $('#humidity').text(Humidity[0] + "%");
         $('#weather-icon').attr('src', icons[0]);
+
         $('#weather-info').removeClass('hidden');
         
         setWeatherBackground(conditions[0]);
